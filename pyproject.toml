@@ -26,12 +26,12 @@ digdaglog2sql = "digdaglog2sql.cli:run"
 [tool.taskipy.tasks]
 test = { cmd = "pytest tests", help = "runs all unit tests" }
 pr_test = "task lint"
-fmt = { cmd = "black tests digdaglog2sql", help = "format code" }
+fmt = { cmd = "black tests digdaglog2sql && isort digdaglog2sql tests", help = "format code" }
 lint = { cmd = "task lint_black && task lint_flake8 && task lint_isort && task lint_mypy", help = "exec lint" }
 lint_flake8 = "flake8 --max-line-length=88 tests digdaglog2sql"
 lint_mypy = "mypy tests digdaglog2sql"
 lint_black = "black --check tests digdaglog2sql"
-lint_isort = "isort digdaglog2sql"
+lint_isort = "isort digdaglog2sql tests --check-only"
 
 [[tool.mypy.overrides]]
 module = ["tdworkflow"]
