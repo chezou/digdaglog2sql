@@ -43,6 +43,8 @@ Or, you can use Session ID of Treasure Workflow.
 digdaglog2sql --session-id 12345 --site us --output output.sql
 ```
 
+Ensure set `TD_API_KEY` into environment variable.
+
 ## Note
 
 As of May 5 2022, if you want to use sqllineage for Trino and Hive logs from Treasure Data,
