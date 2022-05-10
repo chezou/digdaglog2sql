@@ -14,9 +14,7 @@ class Mutex(click.Option):
         assert self.not_required_if, "'not_required_if' parameter required"
         kwargs["help"] = (
             kwargs.get("help", "")
-            + "Option is mutually exclusive with "
-            + ", ".join(self.not_required_if)
-            + "."
+            + f" Option is mutually exclusive with {', '.join(self.not_required_if)}."
         ).strip()
         super(Mutex, self).__init__(*args, **kwargs)
 
@@ -26,9 +24,8 @@ class Mutex(click.Option):
             if mutex_opt in opts:
                 if current_opt:
                     raise click.UsageError(
-                        f"Illegal usage: '{str(self.name)}' is mutually exclusive with "
-                        + str(mutex_opt)
-                        + "."
+                        f"Illegal usage: '{self.name}' is mutually exclusive with "
+                        f"{mutex_opt}."
                     )
                 else:
                     self.prompt = None
@@ -46,7 +43,7 @@ class Mutex(click.Option):
 @click.option(
     "--session-id",
     type=int,
-    help="Session ID of workflow. ",
+    help="Session ID of workflow.",
     cls=Mutex,
     not_required_if=["input"],
 )
@@ -74,7 +71,7 @@ class Mutex(click.Option):
     is_flag=True,
     default=False,
     cls=Mutex,
-    not_required_if=["input", "side"],
+    not_required_if=["input", "site"],
 )
 def run(
     input: typing.IO,

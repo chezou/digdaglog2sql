@@ -22,12 +22,17 @@ Usage: digdaglog2sql [OPTIONS]
 
 Options:
   --input FILENAME               Option is mutually exclusive with session_id,
-                                 site.
+                                 site, endpoint, http.
   --session-id INTEGER           Session ID of workflow. Option is mutually
                                  exclusive with input.
-  --site [us|jp|eu01|ap02|ap03]  Option is mutually exclusive with input.
+  --site [us|jp|eu01|ap02|ap03]  Option is mutually exclusive with input,
+                                 endpoint, http.
   --output FILENAME              [required]
   --drop-cdp-db                  If true, drop cdp_audience_xxx DB name.
+  --endpoint TEXT                Digdag server endpoint. Option is mutually
+                                 exclusive with site, input.
+  --http                         Use http schema. Option is mutually exclusive
+                                 with input, side.
   --help                         Show this message and exit.
 ```
 
