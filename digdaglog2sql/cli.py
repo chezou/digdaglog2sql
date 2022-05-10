@@ -76,7 +76,7 @@ class Mutex(click.Option):
 def run(
     input: typing.IO,
     output: typing.IO,
-    session_id: str,
+    session_id: int,
     site: str,
     drop_cdp_db: bool,
     endpoint: str,
