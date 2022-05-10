@@ -11,7 +11,7 @@ maintainers = ["Aki Ariga <chezou@gmail.com>"]
 python = "^3.7"
 taskipy = "^1.10.1"
 click = "^8.1.3"
-tdworkflow = "^0.6.0"
+tdworkflow = "^0.6.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2"
@@ -37,10 +37,6 @@ lint_flake8 = "flake8 --max-line-length=88 tests digdaglog2sql"
 lint_mypy = "mypy tests digdaglog2sql"
 lint_black = "black --check tests digdaglog2sql"
 lint_isort = "isort digdaglog2sql tests --check-only"
-
-[[tool.mypy.overrides]]
-module = ["tdworkflow"]
-ignore_missing_imports = true
 
 [build-system]
 requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]
