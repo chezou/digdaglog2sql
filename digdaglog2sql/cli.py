@@ -41,7 +41,7 @@ class Mutex(click.Option):
     type=click.File("r"),
     prompt=True,
     cls=Mutex,
-    not_required_if=["session_id", "site"],
+    not_required_if=["session_id", "site", "endpoint", "http"],
 )
 @click.option(
     "--session-id",
@@ -55,11 +55,26 @@ class Mutex(click.Option):
     type=click.Choice(["us", "jp", "eu01", "ap02", "ap03"]),
     default="us",
     cls=Mutex,
-    not_required_if=["input"],
+    not_required_if=["input", "endpoint", "http"],
 )
 @click.option("--output", type=click.File("wt"), required=True)
 @click.option(
     "--drop-cdp-db", help="If true, drop cdp_audience_xxx DB name. ", is_flag=True
+)
+@click.option(
+    "--endpoint",
+    type=str,
+    help="Digdag server endpoint.",
+    cls=Mutex,
+    not_required_if=["site", "input"],
+)
+@click.option(
+    "--http",
+    help="Use http schema.",
+    is_flag=True,
+    default=False,
+    cls=Mutex,
+    not_required_if=["input", "side"],
 )
 def run(
     input: typing.IO,
@@ -67,17 +82,30 @@ def run(
     session_id: str,
     site: str,
     drop_cdp_db: bool,
+    endpoint: str,
+    http: bool,
 ):
 
     log = ""
     if input:
         log = input.read()
     elif session_id:
-        apikey = os.getenv("TD_API_KEY")
-        if not apikey:
-            raise ValueError("TD_API_KEY should be set in environment variable.")
+        tdwf_opts = {}
+        if endpoint:
+            tdwf_opts["endpoint"] = endpoint
+            if http:
+                tdwf_opts["schema"] = "http"
+        else:
+            apikey = os.getenv("TD_API_KEY")
+            if not apikey:
+                raise ValueError("TD_API_KEY should be set in environment variable.")
+            if not site:
+                raise ValueError("site option should be set.")
 
-        client = tdworkflow.client.Client(site=site, apikey=apikey)
+            tdwf_opts["site"] = site
+            tdwf_opts["apikey"] = apikey
+
+        client = tdworkflow.client.Client(**tdwf_opts)
         attempt = client.session_attempts(session=session_id)[0]
         log = "".join(client.logs(attempt=attempt))
 
