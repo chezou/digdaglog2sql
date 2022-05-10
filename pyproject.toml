@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "digdaglog2sql"
-version = "0.0.2"
+version = "0.0.0" # Use poetry-dynamic-versioning
 description = "Extract SQLs from digdag log"
 license = "Apache-2.0"
 readme = "README.md"
@@ -24,6 +24,10 @@ importlib-metadata = {version = ">=1.6.0", python = "<3.8"}
 [tool.poetry.scripts]
 digdaglog2sql = "digdaglog2sql.cli:run"
 
+[tool.poetry-dynamic-versioning]
+enable = true
+style = "pep440"
+
 [tool.taskipy.tasks]
 test = { cmd = "pytest tests", help = "runs all unit tests" }
 pr_test = "task lint"
@@ -39,5 +43,5 @@ module = ["tdworkflow"]
 ignore_missing_imports = true
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]
 build-backend = "poetry.core.masonry.api"
