@@ -10,31 +10,6 @@ from cloup.constraints import If, RequireExactly, mutually_exclusive
 from .extractor import extract_sql
 
 
-class Mutex(click.Option):
-    def __init__(self, *args, **kwargs):
-        self.not_required_if: list = kwargs.pop("not_required_if")
-
-        assert self.not_required_if, "'not_required_if' parameter required"
-        kwargs["help"] = (
-            kwargs.get("help", "")
-            + f" Option is mutually exclusive with {', '.join(self.not_required_if)}."
-        ).strip()
-        super(Mutex, self).__init__(*args, **kwargs)
-
-    def handle_parse_result(self, ctx, opts, args):
-        current_opt: bool = self.name in opts
-        for mutex_opt in self.not_required_if:
-            if mutex_opt in opts:
-                if current_opt:
-                    raise click.UsageError(
-                        f"Illegal usage: '{self.name}' is mutually exclusive with "
-                        f"{mutex_opt}."
-                    )
-                else:
-                    self.prompt = None
-        return super(Mutex, self).handle_parse_result(ctx, opts, args)
-
-
 @cloup.command(show_constraints=True)
 @option_group(
     "Input log by file",
