@@ -20,20 +20,27 @@ $ source .venv/bin/activate
 $ digdaglog2sql --help
 Usage: digdaglog2sql [OPTIONS]
 
-Options:
-  --input FILENAME               Option is mutually exclusive with session_id,
-                                 site, endpoint, http.
-  --session-id INTEGER           Session ID of workflow. Option is mutually
-                                 exclusive with input.
-  --site [us|jp|eu01|ap02|ap03]  Option is mutually exclusive with input,
-                                 endpoint, http.
-  --output FILENAME              [required]
+Input log by file:
+  --input FILENAME               Input file name of a workflow log. Use - for
+                                 STDIN.
+
+Download log by Session ID:
+  --session-id INTEGER           Session ID of the target workflow.
+  --site [us|jp|eu01|ap02|ap03]  Treasure Workflow site name.  [default: us]
+  --endpoint TEXT                Digdag server endpoint.
+  --http                         Enforce to use http schema.
+
+Output:
+  --output FILENAME              Output file name. Use - for STDOUT.  [required]
+
+Other options:
   --drop-cdp-db                  If true, drop cdp_audience_xxx DB name.
-  --endpoint TEXT                Digdag server endpoint. Option is mutually
-                                 exclusive with site, input.
-  --http                         Use http schema. Option is mutually exclusive
-                                 with input, side.
   --help                         Show this message and exit.
+
+Constraints:
+  {--input, --session-id}  exactly 1 required
+  {--site, --endpoint}     exactly 1 required if --session-id is set
+  {--site, --http}         mutually exclusive
 ```
 
 You can use log file on local environment.
