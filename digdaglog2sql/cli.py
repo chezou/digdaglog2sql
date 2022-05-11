@@ -1,5 +1,5 @@
 import os
-import typing
+from typing import IO, Optional
 
 import click
 import cloup
@@ -50,18 +50,23 @@ from .extractor import extract_sql
         required=True,
     ),
 )
-@option("--drop-cdp-db", help="If true, drop cdp_audience_xxx DB name. ", is_flag=True)
+@option(
+    "--drop-cdp-db",
+    help="If true, drop cdp_audience_xxx DB name. ",
+    is_flag=True,
+    default=False,
+)
 @constraint(RequireExactly(1), ["input", "session_id"])
 @constraint(If("session_id", then=RequireExactly(1)), ["site", "endpoint"])
 @constraint(mutually_exclusive, ["site", "http"])
 def run(
-    input: typing.IO,
-    output: typing.IO,
-    session_id: int,
+    input: Optional[IO],
+    output: IO,
+    session_id: Optional[int],
     site: str,
     drop_cdp_db: bool,
-    endpoint: str,
-    http: bool,
+    endpoint: Optional[str],
+    http: Optional[bool],
 ):
 
     log = ""
