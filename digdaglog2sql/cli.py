@@ -5,7 +5,7 @@ import click
 import cloup
 import tdworkflow
 from cloup import constraint, option, option_group
-from cloup.constraints import If, RequireAtLeast, RequireExactly, mutually_exclusive
+from cloup.constraints import If, RequireExactly, mutually_exclusive
 
 from .extractor import extract_sql
 
