@@ -102,8 +102,6 @@ def run(
             apikey = os.getenv("TD_API_KEY")
             if not apikey:
                 raise ValueError("TD_API_KEY should be set in environment variable.")
-            if not site:
-                raise ValueError("site option should be set.")
 
             tdwf_opts["site"] = site
             tdwf_opts["apikey"] = apikey
