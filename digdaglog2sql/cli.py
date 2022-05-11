@@ -2,7 +2,10 @@ import os
 import typing
 
 import click
+import cloup
 import tdworkflow
+from cloup import constraint, option, option_group
+from cloup.constraints import If, RequireAtLeast, RequireExactly, mutually_exclusive
 
 from .extractor import extract_sql
 
@@ -32,47 +35,50 @@ class Mutex(click.Option):
         return super(Mutex, self).handle_parse_result(ctx, opts, args)
 
 
-@click.command()
-@click.option(
-    "--input",
-    type=click.File("r"),
-    prompt=True,
-    cls=Mutex,
-    not_required_if=["session_id", "site", "endpoint", "http"],
+@cloup.command(show_constraints=True)
+@option_group(
+    "Input log by file",
+    option(
+        "--input",
+        help="Input file name of a workflow log. Use - for STDIN.",
+        type=click.File("r"),
+    ),
 )
-@click.option(
-    "--session-id",
-    type=int,
-    help="Session ID of workflow.",
-    cls=Mutex,
-    not_required_if=["input"],
+@option_group(
+    "Download log by Session ID",
+    option("--session-id", help="Session ID of the target workflow.", type=int),
+    option(
+        "--site",
+        type=click.Choice(["us", "jp", "eu01", "ap02", "ap03"]),
+        help="Treasure Workflow site name.",
+        default="us",
+        show_default=True,
+    ),
+    option(
+        "--endpoint",
+        type=str,
+        help="Digdag server endpoint.",
+    ),
+    option(
+        "--http",
+        help="Enforce to use http schema.",
+        is_flag=True,
+        default=False,
+    ),
 )
-@click.option(
-    "--site",
-    type=click.Choice(["us", "jp", "eu01", "ap02", "ap03"]),
-    default="us",
-    cls=Mutex,
-    not_required_if=["input", "endpoint", "http"],
+@option_group(
+    "Output",
+    option(
+        "--output",
+        help="Output file name. Use - for STDOUT.",
+        type=click.File("wt"),
+        required=True,
+    ),
 )
-@click.option("--output", type=click.File("wt"), required=True)
-@click.option(
-    "--drop-cdp-db", help="If true, drop cdp_audience_xxx DB name. ", is_flag=True
-)
-@click.option(
-    "--endpoint",
-    type=str,
-    help="Digdag server endpoint.",
-    cls=Mutex,
-    not_required_if=["site", "input"],
-)
-@click.option(
-    "--http",
-    help="Use http schema.",
-    is_flag=True,
-    default=False,
-    cls=Mutex,
-    not_required_if=["input", "site"],
-)
+@option("--drop-cdp-db", help="If true, drop cdp_audience_xxx DB name. ", is_flag=True)
+@constraint(RequireExactly(1), ["input", "session_id"])
+@constraint(If("session_id", then=RequireExactly(1)), ["site", "endpoint"])
+@constraint(mutually_exclusive, ["site", "http"])
 def run(
     input: typing.IO,
     output: typing.IO,
