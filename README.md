@@ -56,15 +56,3 @@ digdaglog2sql --session-id 12345 --site us --output output.sql
 ```
 
 Ensure set `TD_API_KEY` into environment variable.
-
-## Note
-
-As of May 5 2022, if you want to use sqllineage for Trino and Hive logs from Treasure Data,
-recommend to install sqlparse and sqllineage as the following:
-
-```sh
-pip install git+https://github.com/chezou/sqlparse.git@trino#egg=sqlparse==0.4.3.dev0
-pip install git+https://github.com/chezou/sqllineage.git@trino#egg=sqllineage==1.3.4
-```
-
-You have to ensure to have node environment for sqllineage installation from source.
