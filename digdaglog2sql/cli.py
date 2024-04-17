@@ -1,5 +1,5 @@
 import os
-from typing import IO, Optional
+from typing import IO, Iterable, Optional, cast
 
 import click
 import cloup
@@ -88,7 +88,7 @@ def run(
 
         client = tdworkflow.client.Client(**tdwf_opts)
         attempt = client.session_attempts(session=session_id)[0]
-        log = "".join(client.logs(attempt=attempt))
+        log = "".join(cast(Iterable[str], client.logs(attempt=attempt)))
 
     sql = extract_sql(log, drop_cdp_db=drop_cdp_db)
     output.write(sql)
